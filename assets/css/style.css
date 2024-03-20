@@ -14,3 +14,9 @@ body {
 .task-card:hover {
   cursor: grab;
 }
+
+
+/* delete everything below later */
+body {
+  background-color: rgb(104, 99, 99) !important;
+}
