@@ -3,6 +3,10 @@ const taskTitleInput = $('#taskTitle');
 const taskDueDateInput = $('#taskDueDate');
 const taskDescriptionInput = $('#taskDescription');
 const swimLanes = $('.swim-lanes');
+// const modalAddTaskSubmit = $('#submit');
+const modalCloseButton = $('.btn-close');
+const clickEvent = new Event('click');
+// modalCloseButton.dispatchEvent(clickEvent);
 
 // Retrieve tasks and nextId from localStorage
 let taskList = JSON.parse(localStorage.getItem("tasks"));
@@ -55,12 +59,10 @@ function renderTaskList() {
 
     let tasks = taskList;
 
-    if (!tasks) {
-        tasks = [];
-    };
+    // if (!tasks) {
+    //     tasks = [];
+    // };
 
-    console.log(tasks);
-    // ? Empty existing project cards out of the lanes
     const todoList = $('#todo-cards');
     todoList.empty();
 
@@ -80,7 +82,6 @@ function renderTaskList() {
         }
     }
 
-    // ? Use JQuery UI to make task cards draggable
     $('.draggable').draggable({
         opacity: 0.5,
         zIndex: 2,
@@ -120,6 +121,12 @@ function handleAddTask(event) {
     taskDueDateInput.val('');
     taskDescriptionInput.val('');
 
+    // const modalCloseButton = $('.btn-close');
+    // const clickEvent = new Event('click');
+    // const btnClose = document.querySelector('.btn-close');
+    // const clickEvent = new Event('click');
+    // modalCloseButton.dispatchEvent(clickEvent);
+
     renderTaskList();
 };
 
@@ -127,29 +134,37 @@ function handleAddTask(event) {
 function handleDeleteTask(event) {
     const taskId = $(this).attr('data-task-id');
     const tasks = taskList;
-    
+
     tasks.forEach((task) => {
         if (task.id == taskId) {
             tasks.splice(tasks.indexOf(task), 1);
         }
     });
-    
+
     localStorage.setItem('tasks', JSON.stringify(tasks));
     renderTaskList();
 }
 
 // Todo: create a function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {
-    
-    const taskId = $(this).attr('data-task-id');
+    const taskId = $(ui.draggable).attr('data-task-id');
+    // const taskId = (ui.draggable.attr('data-task-id'));
+
     const tasks = taskList;
-    console.log(taskId);
 
     const newStatus = event.target.id;
-    console.log(newStatus);
+
+    // tasks.forEach((task) => {
+    //     if (task.id == taskId) {
+    //         task.status = newStatus;
+    //     }
+    // });
 
     for (let task of tasks) {
-        task.status = newStatus;
+        if (task.id == taskId) {
+            task.status = newStatus;
+        }
+
     }
 
     localStorage.setItem('tasks', JSON.stringify(tasks));
@@ -157,29 +172,54 @@ function handleDrop(event, ui) {
 }
 
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
+// jQuery.noConflict();
+// jQuery(document).ready(function($) {
 $(document).ready(function () {
 
+    let tasks = taskList;
+
+    if (!tasks) {
+        tasks = [];
+    };
+    // if (taskList === !tasks) {
+    //    const task3 = [];
+    //    const tasks2 = [];
+    // console.log(taskList == task3);
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+    // };
+    // Todo: render task list
+    renderTaskList();
+
+
+
+    // Todo: add event listeners
+    addTask.on('submit', handleAddTask); // half works!!!!!
+    // addTask.on('submit', function() {
+    //     handleAddTask();
+    // }); // other half works
+    // addTask.on('submit', 'btn-close', handleAddTask);
+    // modalAddTaskSubmit.on('click', console.log('click'));
+    // modalAddTaskSubmit.on('submit', console.log('submit')); 
+
+    // delete
+    swimLanes.on('click', '.btn-delete-project', handleDeleteTask);
+
+
+    // Todo: make lanes droppable
+    $('.lane').droppable({
+        accept: '.draggable',
+        drop: handleDrop,
+    });
+
+    // Todo: add datepicker to form input
+    $('#taskDueDate').datepicker({
+        changeMonth: true,
+        changeYear: true,
+    });
 });
 
-// Todo: render task list
-renderTaskList();
-
-// Todo: add event listeners
-addTask.on('submit', handleAddTask);
-
-// delete
-
-swimLanes.on('click', '.btn-delete-project', handleDeleteTask);
-
-
-// Todo: make lanes droppable
-$('.lane').droppable({
-    accept: '.draggable',
-    drop: handleDrop,
-});
-
-// Todo: add datepicker to form input
-$('#taskDueDate').datepicker({
-    changeMonth: true,
-    changeYear: true,
-});
+// $(function () {
+// $("#btnClosePopup").click(function () {
+// $("#MyPopup").modal("hide");
+// });
+// });
