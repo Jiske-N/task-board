@@ -1,48 +1,39 @@
-const addTask = $('#addTask');
-const taskTitleInput = $('#taskTitle');
-const taskDueDateInput = $('#taskDueDate');
-const taskDescriptionInput = $('#taskDescription');
-const swimLanes = $('.swim-lanes');
-// const modalAddTaskSubmit = $('#submit');
-const modalCloseButton = $('.btn-close');
-const clickEvent = new Event('click');
-// modalCloseButton.dispatchEvent(clickEvent);
+// I structured everything to only use the global variables and functions provided in the starter code.
+// Things are not necessarily the structure I would otherwise have used as a result.
+// I also left the starter code comments in but denoted them with a ---SC at the beginning and end.
 
-// Retrieve tasks and nextId from localStorage
+// ---SC Retrieve tasks and nextId from localStorage SC---
 let taskList = JSON.parse(localStorage.getItem("tasks"));
+// I don't know the intended use for the line below, I didn't reference it at all so can be safely deleted.
 let nextId = JSON.parse(localStorage.getItem("nextId"));
 
-// Todo: create a function to generate a unique task id
+// ---SC Todo: create a function to generate a unique task id SC---
 function generateTaskId() {
+    // decided that in this instance date.now on it's own would suffice as unique as multiple instances can't trigger simultaneously
     let uniqueId = Date.now();
     return uniqueId;
 };
 
-// Todo: create a function to create a task card
+// ---SC Todo: create a function to create a task card SC---
 function createTaskCard(task) {
 
-    const taskCard = $('<div>')
-        .addClass('card project-card draggable my-3')
-        .attr('data-task-id', task.id);
-    const cardHeader = $('<div>').addClass('card-header h4').text('task.title');
+    // bootstrap classes for card styling and attributes for manipulation
+    const taskCard = $('<div>').addClass('card project-card draggable my-3').attr('data-task-id', task.id);
+    const cardHeader = $('<div>').addClass('card-header h4').text(task.title);
     const cardBody = $('<div>').addClass('card-body');
     const cardDescription = $('<p>').addClass('card-text').text(task.description);
     const cardDueDate = $('<p>').addClass('card-text').text(task.dueDate);
-    const cardDeleteBtn = $('<button>')
-        .addClass('btn btn-danger delete')
-        .text('Delete')
-        .attr('data-task-id', task.id);
+    const cardDeleteBtn = $('<button>').addClass('btn btn-danger delete').text('Delete').attr('data-task-id', task.id);
     cardDeleteBtn.on('click', handleDeleteTask);
 
-
+    // assign colour scheme to task cards
     if (task.dueDate && task.status !== 'done') {
-        const now = dayjs();
+        const timeNow = dayjs();
         const taskDueDate = dayjs(task.dueDate, 'DD/MM/YYYY');
 
-
-        if (now.isSame(taskDueDate, 'day')) {
+        if (timeNow.isSame(taskDueDate, 'day')) {
             taskCard.addClass('bg-warning text-white');
-        } else if (now.isAfter(taskDueDate)) {
+        } else if (timeNow.isAfter(taskDueDate)) {
             taskCard.addClass('bg-danger text-white');
             cardDeleteBtn.addClass('border-light');
         }
@@ -54,27 +45,32 @@ function createTaskCard(task) {
     return taskCard;
 };
 
-// Todo: create a function to render the task list and make cards draggable
+// ---SC Todo: create a function to render the task list and make cards draggable SC---
 function renderTaskList() {
 
+    // throws error
     let tasks = taskList;
+    // // removes error but makes tasks overwrite prior to refresh
+    // let tasks = JSON.parse(localStorage.getItem("tasks"));
 
+    // probably not needed but just in case for issue above
     // if (!tasks) {
     //     tasks = [];
     // };
 
-    const todoList = $('#todo-cards');
-    todoList.empty();
-
+    // empty all swim lanes
+    const toDoList = $('#todo-cards');
     const inProgressList = $('#in-progress-cards');
-    inProgressList.empty();
-
     const doneList = $('#done-cards');
+
+    toDoList.empty();
+    inProgressList.empty();
     doneList.empty();
 
+    // refill swim lanes with updated statuses
     for (let task of tasks) {
         if (task.status === 'to-do') {
-            todoList.append(createTaskCard(task));
+            toDoList.append(createTaskCard(task));
         } else if (task.status === 'in-progress') {
             inProgressList.append(createTaskCard(task));
         } else if (task.status === 'done') {
@@ -84,15 +80,20 @@ function renderTaskList() {
 
     $('.draggable').draggable({
         opacity: 0.5,
+        // so they appear in front of new lanes
         zIndex: 2,
         containment: '.swim-lanes',
         revert: 'invalid'
     });
 };
 
-// Todo: create a function to handle adding a new task ***adding to local storage***
+// ---SC Todo: create a function to handle adding a new task SC---
 function handleAddTask(event) {
     event.preventDefault();
+
+    const taskTitleInput = $('#taskTitle');
+    const taskDueDateInput = $('#taskDueDate');
+    const taskDescriptionInput = $('#taskDescription');
 
     const taskTitle = taskTitleInput.val().trim();
     const taskDueDate = taskDueDateInput.val();
@@ -106,7 +107,7 @@ function handleAddTask(event) {
         id: taskId,
         status: 'to-do',
     };
-
+    // __________________________________________________________________________________________________________________
     let updateTasks = taskList;
 
     if (!updateTasks) {
@@ -121,31 +122,39 @@ function handleAddTask(event) {
     taskDueDateInput.val('');
     taskDescriptionInput.val('');
 
-    // const modalCloseButton = $('.btn-close');
-    // const clickEvent = new Event('click');
-    // const btnClose = document.querySelector('.btn-close');
-    // const clickEvent = new Event('click');
-    // modalCloseButton.dispatchEvent(clickEvent);
+    // makes the modal window close automatically after entering a task
+    // comment in or out depending on desired functionality
+    const modalCloseButton = $('.btn-close');
+    modalCloseButton.click();
 
     renderTaskList();
 };
 
-// Todo: create a function to handle deleting a task
+// ---SC Todo: create a function to handle deleting a task SC---
+// event paramater isn't referenced, lift it in as it was part of the starter code.
 function handleDeleteTask(event) {
     const taskId = $(this).attr('data-task-id');
     const tasks = taskList;
 
-    tasks.forEach((task) => {
+    // tasks.forEach((task) => {
+    //     if (task.id == taskId) {
+    //         tasks.splice(tasks.indexOf(task), 1);
+    //     }
+    // });
+
+    for (let task of tasks) {
         if (task.id == taskId) {
             tasks.splice(tasks.indexOf(task), 1);
         }
-    });
+
+    };
 
     localStorage.setItem('tasks', JSON.stringify(tasks));
-    renderTaskList();
-}
 
-// Todo: create a function to handle dropping a task into a new status lane
+    renderTaskList();
+};
+
+// ---SC Todo: create a function to handle dropping a task into a new status lane SC---
 function handleDrop(event, ui) {
     const taskId = $(ui.draggable).attr('data-task-id');
     // const taskId = (ui.draggable.attr('data-task-id'));
@@ -164,62 +173,50 @@ function handleDrop(event, ui) {
         if (task.id == taskId) {
             task.status = newStatus;
         }
-
     }
 
     localStorage.setItem('tasks', JSON.stringify(tasks));
+
     renderTaskList();
 }
 
-// Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
+// ---SC Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker SC---
+
+// potential resolution to the refresh errors
 // jQuery.noConflict();
 // jQuery(document).ready(function($) {
+
+// note items below are in the order listed by the starter code not the order I would choose
 $(document).ready(function () {
 
+    // create blank item to set to local storage, prevents later error
     let tasks = taskList;
 
     if (!tasks) {
         tasks = [];
     };
-    // if (taskList === !tasks) {
-    //    const task3 = [];
-    //    const tasks2 = [];
-    // console.log(taskList == task3);
+  
     localStorage.setItem('tasks', JSON.stringify(tasks));
-    // };
-    // Todo: render task list
+
+    // display data from local storage
     renderTaskList();
 
+    // event listeners
+    const addTask = $('#addTask');
+    addTask.on('submit', handleAddTask);
 
-
-    // Todo: add event listeners
-    addTask.on('submit', handleAddTask); // half works!!!!!
-    // addTask.on('submit', function() {
-    //     handleAddTask();
-    // }); // other half works
-    // addTask.on('submit', 'btn-close', handleAddTask);
-    // modalAddTaskSubmit.on('click', console.log('click'));
-    // modalAddTaskSubmit.on('submit', console.log('submit')); 
-
-    // delete
+    const swimLanes = $('.swim-lanes');
     swimLanes.on('click', '.btn-delete-project', handleDeleteTask);
 
-
-    // Todo: make lanes droppable
+    // droppable lanes for cards
     $('.lane').droppable({
         accept: '.draggable',
         drop: handleDrop,
     });
 
-    // Todo: add datepicker to form input
+    // date picker for modal
     $('#taskDueDate').datepicker({
         changeMonth: true,
         changeYear: true,
     });
 });
-
-// $(function () {
-// $("#btnClosePopup").click(function () {
-// $("#MyPopup").modal("hide");
-// });
-// });
