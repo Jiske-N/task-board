@@ -3,6 +3,7 @@
 // I also left the starter code comments in but denoted them with a ---SC at the beginning and end.
 
 // ---SC Retrieve tasks and nextId from localStorage SC---
+// this line is referenced once on load but otherwise largely useless, would probably remove if it wasn't starter code.
 let taskList = JSON.parse(localStorage.getItem("tasks"));
 // I don't know the intended use for the line below, I didn't reference it at all so can be safely deleted.
 let nextId = JSON.parse(localStorage.getItem("nextId"));
@@ -37,7 +38,7 @@ function createTaskCard(task) {
             taskCard.addClass('bg-danger text-white');
             cardDeleteBtn.addClass('border-light');
         }
-    }
+    };
 
     cardBody.append(cardDescription, cardDueDate, cardDeleteBtn);
     taskCard.append(cardHeader, cardBody);
@@ -48,15 +49,7 @@ function createTaskCard(task) {
 // ---SC Todo: create a function to render the task list and make cards draggable SC---
 function renderTaskList() {
 
-    // throws error
-    let tasks = taskList;
-    // // removes error but makes tasks overwrite prior to refresh
-    // let tasks = JSON.parse(localStorage.getItem("tasks"));
-
-    // probably not needed but just in case for issue above
-    // if (!tasks) {
-    //     tasks = [];
-    // };
+    let tasks = JSON.parse(localStorage.getItem("tasks"));
 
     // empty all swim lanes
     const toDoList = $('#todo-cards');
@@ -101,15 +94,16 @@ function handleAddTask(event) {
     const taskId = generateTaskId();
 
     const newTask = {
-        title: taskTitle,
+        title: $.trim(taskTitle).charAt(0).toUpperCase() + $.trim(taskTitle).slice(1),
         dueDate: taskDueDate,
-        description: taskDescription,
+        description: $.trim(taskDescription).charAt(0).toUpperCase() + $.trim(taskDescription).slice(1),
         id: taskId,
         status: 'to-do',
     };
-    // __________________________________________________________________________________________________________________
-    let updateTasks = taskList;
 
+    let updateTasks = JSON.parse(localStorage.getItem("tasks"));
+
+    // make an array to push newtask into if one doesn't exist
     if (!updateTasks) {
         updateTasks = [];
     };
@@ -131,22 +125,15 @@ function handleAddTask(event) {
 };
 
 // ---SC Todo: create a function to handle deleting a task SC---
-// event paramater isn't referenced, lift it in as it was part of the starter code.
+// event paramater isn't referenced, left it in as it was part of the starter code, can be safely deleted
 function handleDeleteTask(event) {
     const taskId = $(this).attr('data-task-id');
-    const tasks = taskList;
-
-    // tasks.forEach((task) => {
-    //     if (task.id == taskId) {
-    //         tasks.splice(tasks.indexOf(task), 1);
-    //     }
-    // });
+    const tasks = JSON.parse(localStorage.getItem("tasks"));
 
     for (let task of tasks) {
         if (task.id == taskId) {
             tasks.splice(tasks.indexOf(task), 1);
         }
-
     };
 
     localStorage.setItem('tasks', JSON.stringify(tasks));
@@ -157,35 +144,21 @@ function handleDeleteTask(event) {
 // ---SC Todo: create a function to handle dropping a task into a new status lane SC---
 function handleDrop(event, ui) {
     const taskId = $(ui.draggable).attr('data-task-id');
-    // const taskId = (ui.draggable.attr('data-task-id'));
-
-    const tasks = taskList;
-
+    const tasks = JSON.parse(localStorage.getItem("tasks"));
     const newStatus = event.target.id;
-
-    // tasks.forEach((task) => {
-    //     if (task.id == taskId) {
-    //         task.status = newStatus;
-    //     }
-    // });
 
     for (let task of tasks) {
         if (task.id == taskId) {
             task.status = newStatus;
-        }
-    }
+        };
+    };
 
     localStorage.setItem('tasks', JSON.stringify(tasks));
 
     renderTaskList();
-}
+};
 
 // ---SC Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker SC---
-
-// potential resolution to the refresh errors
-// jQuery.noConflict();
-// jQuery(document).ready(function($) {
-
 // note items below are in the order listed by the starter code not the order I would choose
 $(document).ready(function () {
 
@@ -195,13 +168,14 @@ $(document).ready(function () {
     if (!tasks) {
         tasks = [];
     };
-  
+
     localStorage.setItem('tasks', JSON.stringify(tasks));
 
     // display data from local storage
     renderTaskList();
 
     // event listeners
+    // this is the add task button on the modal not the homepage
     const addTask = $('#addTask');
     addTask.on('submit', handleAddTask);
 
