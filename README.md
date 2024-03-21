@@ -1,100 +1,62 @@
-# 05 Third-Party APIs: Task Board
+# Task Board
 
-## Your Task
+## Link & Contents
+- [The Deployed Page](https://jiske-n.github.io/task-board/)
+- [Further Goals](#further-goals)
+- [Potential Issues/Improvements](#potential-issuesimprovements)
+- [Key Learnings](#key-learnings)
+- [Contributing and Feedback](#contributing-and-feedback)
+- [Credits](#credits)
+- [Licence](#licence)
 
-Create a simple task board application that allows a team to manage project tasks by modifying starter code. This app will run in the browser and feature dynamically updated HTML and CSS powered by jQuery.
+## The Task Board
 
-You'll need to use the [Day.js](https://day.js.org/en/) library to work with dates. Be sure to read the documentation carefully and concentrate on using Day.js in the browser.
+This page was designed for a user to be able to input individual project tasks and be able to see three rows indicating task status. The user is then able to manipulate the tasks by moving them between rows/statuses. Other features include:
+- Saving the tasks to local storage.
+- Colour theming for different tasks depending on their status and when they are due.
+- The ability to remove or delete tasks.
 
-## User Story
+Goals included, shaping my code to perform all the functionality required whilst writing it only in the provided in the starter code functions, incorporating dayjs, jquery, jqueryui and bootstrap in the project.
 
-```md
-AS A project team member with multiple tasks to organize
-I WANT a task board 
-SO THAT I can add individual project tasks, manage their state of progress and track overall project progress accordingly
-```
+![Picture of the Task Board](./assets/images/task-board-screenshot.png)
+- [The Deployed Page](https://jiske-n.github.io/task-board/)
 
-## Acceptance Criteria
+## Further Goals
 
-```md
-GIVEN a task board to manage a project
-WHEN I open the task board
-THEN the list of project tasks is displayed in columns representing the task progress state (Not Yet Started, In Progress, Completed)
-WHEN I view the task board for the project
-THEN each task is color coded to indicate whether it is nearing the deadline (yellow) or is overdue (red)
-WHEN I click on the button to define a new task
-THEN I can enter the title, description and deadline date for the new task into a modal dialog
-WHEN I click the save button for that task
-THEN the properties for that task are saved in localStorage
-WHEN I drag a task to a different progress column
-THEN the task's progress state is updated accordingly and will stay in the new column after refreshing
-WHEN I click the delete button for a task
-THEN the task is removed from the task board and will not be added back after refreshing
-WHEN I refresh the page
-THEN the saved tasks persist
-```
+Other goals include:
+-Writing a good README.
+-Ensuring commenting is folowing best practices and in place for ease of future alteration.
+-Have all elements of the page working without errors.
 
-The following animation demonstrates the application functionality:
+## Potential Issues/Improvements
 
-![A user adds three tasks to the task board and changes the state of two of them to in progress and then completion. The user then deletes the two cards in the done column.](./Assets/05-third-party-apis-homework-demo.gif)
+- Condensing some of the code. For example replacing the section converting the first letter to capitalise with a function achieving the same.
+- More consistent use of just jquery/ui.
+- Unsure if the balance for commenting is about right or too sparse/many.
+- Trying to convert code to be uniform and follow best practice.
 
-## Grading Requirements
+## Key Learnings
 
-> **Note**: If a Challenge assignment submission is marked as “0”, it is considered incomplete and will not count towards your graduation requirements. Examples of incomplete submissions include the following:
->
-> * A repository that has no code
->
-> * A repository that includes a unique name but nothing else
->
-> * A repository that includes only a README file but nothing else
->
-> * A repository that only includes starter code
+The biggest learning points and hurdles I faced revolved around working out how different elements linked together.
 
-This Challenge is graded based on the following criteria:
+Other learnings include:
+- Jquery syntax.
+- Triggering artificial 'click' events.
+- Hopefully, improved commenting.
+- Generating unique numbers/ids.
 
-### Technical Acceptance Criteria: 40%
+## Contributing and Feedback
 
-* Satisfies all of the above acceptance criteria plus the following:
+If you find any issues or have contributions or feedback you can do so by opening an [issue](https://github.com/Jiske-N/task-board/issues) on Github.
 
-  * Uses the Day.js library to work with dates
+## Credits
 
-### Deployment: 32%
+Starter code provided by edX/Monash University.
 
-* Application deployed at live URL
+Many function contents were copied and ammended to fit from the solved week 5 mini project.
 
-* Application loads with no errors
+Also made use of the Xpert learning assistant, AskBcs and my instructor with troubleshooting issues.
 
-* Application GitHub URL submitted
+## Licence
 
-* GitHub repo contains application code
-
-### Application Quality: 15%
-
-* Application user experience is intuitive and easy to navigate
-
-* Application user interface style is clean and polished
-
-* Application resembles the mock-up functionality provided in the Challenge instructions
-
-### Repository Quality: 13%
-
-* Repository has a unique name
-
-* Repository follows best practices for file structure and naming conventions
-
-* Repository follows best practices for class/id naming conventions, indentation, quality comments, etc.
-
-* Repository contains multiple descriptive commit messages
-
-* Repository contains quality README file with description, screenshot, and link to deployed application
-
-## Review
-
-You are required to submit the following for review:
-
-* The URL of the deployed application
-
-* The URL of the GitHub repository, with a unique name and a README describing the project
-
-- - -
-© 2024 edX Boot Camps LLC. Confidential and Proprietary. All Rights Reserved.
+None presently. 
